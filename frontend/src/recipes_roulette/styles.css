@@ -1,0 +1,24 @@
+.recipe-image {
+  width: 300px;
+  height: 300px;
+}
+
+.recipe-display {
+  margin-top: 40px;
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spinning {
+    animation: logo-spin infinite 320ms linear;
+  }
+}
