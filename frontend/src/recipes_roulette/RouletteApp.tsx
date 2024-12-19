@@ -7,7 +7,7 @@ const RouletteApp = () => {
 
   // Load recipes from a JSON file
   useEffect(() => {
-    fetch('/scraped_recipes.json') // Adjust path if necessary
+    fetch('/scraped_recipes.json') 
       .then(response => response.json())
       .then(data => setRecipes(data))
       .catch(error => console.error('Error loading recipes:', error));

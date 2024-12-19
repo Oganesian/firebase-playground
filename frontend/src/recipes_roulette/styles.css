@@ -1,12 +1,46 @@
+/* Back Button */
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.back-button img {
+  width: 40px;
+  height: 40px;
+}
+
+/* Title */
+.roulette-title {
+  margin-top: 60px;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Spin Button */
+.spin-button {
+  padding: 10px 20px;
+  font-size: 1.2rem;
+}
+
+/* Recipe Display */
 .recipe-image {
   width: 300px;
   height: 300px;
+  margin-top: 30px;
 }
 
 .recipe-display {
-  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+/* Spinning Animation */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -19,6 +53,6 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .spinning {
-    animation: logo-spin infinite 320ms linear;
+    animation: logo-spin infinite 490ms linear;
   }
 }

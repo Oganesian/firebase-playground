@@ -1,4 +1,4 @@
-import reactLogo from './assets/react.svg'
+import budgetIcon from './assets/checklist.png'
 import rouletteIcon from './assets/bet.png'
 import './App.css'
 import { Routes, Route, Link } from 'react-router'
@@ -19,11 +19,11 @@ function App() {
 function Home() {
   return <div>
     <Link to="/roulette">
-      <img src={rouletteIcon} className="logo" alt="Roulette logo" />
+      <img src={rouletteIcon} className="logo" alt="Roulette Icon" />
     </Link>
-    <a href="https://react.dev" target="_blank">
-      <img src={reactLogo} className="logo react" alt="React logo" />
-    </a>
+    <Link to="/budget">
+      <img src={budgetIcon} className="logo" alt="Budget Icon" />
+    </Link>
   </div>;
 }
 
