@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { getFirestore, collection, getDocs, updateDoc, doc, /* addDoc */ } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
 import { Expense } from './expenses';
@@ -28,15 +28,17 @@ function App() {
       const expensesData = querySnapshot.docs.map(doc => {
         const data = doc.data();
         return {
-          id: doc.id, // Use the actual document ID
+          id: doc.id,
           name: data.name,
           amount: data.amount,
           day: data.day,
           isPaid: data.isPaid,
         };
       });
+      const currentDayOfMonth = new Date().getDate();
+      expensesData.forEach(expense => expense.isPaid = expense.day < currentDayOfMonth);
+      expensesData.sort((a, b) => a.day - b.day);
       setExpenses(expensesData);
-
       const totalPaid = expensesData.filter(expense => expense.isPaid).reduce((sum, expense) => sum + expense.amount, 0);
       const totalSum = expensesData.reduce((sum, expense) => sum + expense.amount, 0);
       setTotals({ paid: totalPaid, remaining: totalSum - totalPaid });
@@ -127,11 +129,12 @@ function App() {
             <div>{expense.amount}</div>
           </div>
         ))}
+        <div className='expense'>
+          <p>Total Paid: {totals.paid} €</p>
+          <p>Remaining: {totals.remaining} €</p>
+        </div>
       </div>
-      <div className='expense'>
-        <p>Total Paid: {totals.paid} €</p>
-        <p>Remaining: {totals.remaining} €</p>
-      </div>
+
     </div>
   );
 }
