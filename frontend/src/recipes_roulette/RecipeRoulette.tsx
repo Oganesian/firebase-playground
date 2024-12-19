@@ -29,7 +29,7 @@ const RecipeRoulette = ({ recipes }: RecipeRouletteProps) => {
   return (
     <div className="roulette-container">
       <h1>Recipe Roulette</h1>
-      <button onClick={spinRoulette} className="spin-button">Spin!</button>
+      <button onClick={spinRoulette} className="spin-button">Spin</button>
       {selectedRecipe ? (
         <div className="recipe-display">
           <a href={selectedRecipe.href} target="_blank" rel="noopener noreferrer">
