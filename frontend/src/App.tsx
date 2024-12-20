@@ -1,12 +1,13 @@
 import budgetIcon from './assets/checklist.png'
 import rouletteIcon from './assets/bet.png'
-import './App.css'
-import { Routes, Route, Link } from 'react-router'
-import RouletteApp from './recipes_roulette/RouletteApp'
-import BudgetApp from './budget/BudgetApp'
+import { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut, User } from 'firebase/auth';
-import { useState, useEffect } from 'react'
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { Routes, Route, Link } from 'react-router';
+import RouletteApp from './recipes_roulette/RouletteApp';
+import BudgetApp from './budget/BudgetApp';
+import './App.css';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCI-an0tALPy5XCMfvlcHHfahk3EQElX4E",
@@ -21,17 +22,25 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 function App() {
   const [user, setUser] = useState<null | User>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setUser(user);
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+
+        if (userDoc.exists()) {
+          setIsAdmin(userDoc.data().role === 'admin');
+        }
       } else {
         setUser(null);
+        setIsAdmin(false);
       }
     });
 
@@ -46,7 +55,13 @@ function App() {
     }
   };
 
-
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Error signing out: ", error);
+    }
+  };
 
   if (!user) {
     return (
@@ -56,36 +71,32 @@ function App() {
       </div>
     );
   }
+
   return (
     <>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home handleSignOut={handleSignOut} />} />
         <Route path="/roulette" element={<RouletteApp />} />
-        <Route path="/budget" element={<BudgetApp />} />
+        {isAdmin && <Route path="/budget" element={<BudgetApp />} />}
+        {!isAdmin && <Route path="/budget" element={<h2>You don't have access to this part of the application</h2>} />}
       </Routes>
     </>
-  )
+  );
 }
 
-function Home() {
-  const handleSignOut = async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error("Error signing out: ", error);
-    }
-  };
+function Home({ handleSignOut }: { handleSignOut: () => void }) {
+  return (
+    <div>
+      <Link to="/roulette">
+        <img src={rouletteIcon} className="logo" alt="Roulette Icon" />
+      </Link>
+      <Link to="/budget">
+        <img src={budgetIcon} className="logo" alt="Budget Icon" />
+      </Link>
 
-  return <div>
-    <Link to="/roulette">
-      <img src={rouletteIcon} className="logo" alt="Roulette Icon" />
-    </Link>
-    <Link to="/budget">
-      <img src={budgetIcon} className="logo" alt="Budget Icon" />
-    </Link>
-
-    <button onClick={handleSignOut}>Sign Out</button>
-  </div>;
+      <button onClick={handleSignOut}>Sign Out</button>
+    </div>
+  );
 }
 
-export default App
+export default App;
